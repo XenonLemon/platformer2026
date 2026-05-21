@@ -197,28 +197,53 @@ public class Level {
 	//Your code goes here! 
 	//Please make sure you read the rubric/directions carefully and implement the solution recursively!
 	private void water(int col, int row, Map map, int fullness) {
-		Water w = new Water(col, row, tileSize, tileset.getImage("Full_water"), this, fullness);
-		map.addTile(col, row, w);
-		//right
-		if(col+1<map.getTiles().length){
-			if(map.getTiles()[col+1][row].isSolid() == false && map.getTiles()[col+1][row] instanceof Water == false){
-				if(fullness > 1){
-					water(col+1, row, map, fullness-1);
-				}
-				else{
-					water(col+1, row, map, 1);
-				}
-			}
-				
+		Water w;
+		if(fullness == 3){ 
+		 	w = new Water(col, row, tileSize, tileset.getImage("Full_water"), this, fullness);
 		}
-		//left
-		if(col-1>=0){
-			if(map.getTiles()[col-1][row].isSolid() == false && map.getTiles()[col-1][row] instanceof Water == false){
-				if(fullness > 1){
-					water(col-1, row, map, fullness-1);
+		else if(fullness == 2){
+			w = new Water(col, row, tileSize, tileset.getImage("Half_water"), this, fullness);
+		}
+		else if(fullness == 1){
+			w = new Water(col, row, tileSize, tileset.getImage("Quarter_water"), this, fullness);
+		}
+		else{
+			w = new Water(col, row, tileSize, tileset.getImage("Falling_water"), this, fullness);
+		}
+
+		map.addTile(col, row, w);
+		//down
+		if(row+2<map.getHeight() && map.getTiles()[col][row+1].isSolid() == false){
+			if(map.getTiles()[col][row+2].isSolid() == true){
+				water(col, row+1, map, 3);
+			}
+			else{
+				water(col, row+1, map, 0);
+			}
+		}
+		//right
+		else{
+			if(col+1<map.getTiles().length){
+				if(map.getTiles()[col+1][row].isSolid() == false && map.getTiles()[col+1][row] instanceof Water == false){
+					if(fullness > 1){
+						water(col+1, row, map, fullness-1);
+					
+					}
+					else{
+						water(col+1, row, map, 1);
+					}
 				}
-				else{
-					water(col-1, row, map, 1);
+				
+			}
+		//left
+			if(col-1>=0){
+				if(map.getTiles()[col-1][row].isSolid() == false && map.getTiles()[col-1][row] instanceof Water == false){
+					if(fullness > 1){
+						water(col-1, row, map, fullness-1);
+					}
+					else{
+						water(col-1, row, map, 1);
+					}
 				}
 			}
 		}	
